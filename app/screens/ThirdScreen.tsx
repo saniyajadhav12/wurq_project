@@ -12,6 +12,9 @@ import {
 import { observer } from "mobx-react-lite"
 import { LineChart } from "react-native-chart-kit"
 import { SafeAreaView } from "react-native-safe-area-context"
+import { useNavigation } from "@react-navigation/native"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { AppStackParamList } from "@/navigators/AppNavigator"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 
 const screenWidth = Dimensions.get("window").width
@@ -19,6 +22,7 @@ const screenWidth = Dimensions.get("window").width
 export const ThirdScreen = observer(function ThirdScreen() {
   const [points, setPoints] = useState("189")
   const [wodName, setWodName] = useState("WOD Newton")
+  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList, 'ThirdScreen'>>()
 
   // State to hold history entries, updated dynamically
   const [historyEntries, setHistoryEntries] = useState([
@@ -121,6 +125,10 @@ export const ThirdScreen = observer(function ThirdScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ flex: 1 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <FontAwesome name="chevron-left" size={20} color="#fff" />
+        </TouchableOpacity>
+
         {/* Header/Logo */}
         <View style={styles.header}>
           <Image
@@ -212,6 +220,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#313E49",
   },
+  backButton: {
+    marginTop: 10,
+    marginLeft: 10,
+    padding: 8,
+    position: "absolute",
+    top: 10,
+    left: 10,
+    zIndex: 100,
+  },
+
   header: {
     backgroundColor: "#313E49",
     paddingVertical: 8,

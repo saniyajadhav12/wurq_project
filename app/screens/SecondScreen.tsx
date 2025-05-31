@@ -6,12 +6,13 @@ import { useNavigation } from "@react-navigation/native"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { AppStackParamList } from "@/navigators/AppNavigator"
 import { SafeAreaView } from "react-native-safe-area-context"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 
 export const SecondScreen = observer(function SecondScreen() {
   const { userStore } = useStores() // Access your userStore
   const [timer, setTimer] = useState(0)
-  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList, 'SecondScreen'>>()
-  
+  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList, "SecondScreen">>()
+
   const [promiseResult, setPromiseResult] = useState("")
 
   //Display a timer that starts when the page opens.
@@ -53,28 +54,30 @@ export const SecondScreen = observer(function SecondScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-    <View style={{flex: 1}}>
-      {/* Timer Display */}
-      <Text style={styles.header}>Second Screen</Text>
-      <Text style={styles.timerText}>Timer: {timer} seconds</Text>
+      <View style={{ flex: 1 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <FontAwesome name="chevron-left" size={20} color="#000" />
+        </TouchableOpacity>
+        {/* Timer Display */}
+        <Text style={styles.header}>Second Screen</Text>
+        <Text style={styles.timerText}>Timer: {timer} seconds</Text>
 
-      {/* Promise Result Display */}
-      <Text style={styles.promiseText}>{promiseResult}</Text>
+        {/* Promise Result Display */}
+        <Text style={styles.promiseText}>{promiseResult}</Text>
 
-      {/* All Users in a Single Text Box */}
-      <Text style={styles.subHeader}>All Users Data:</Text>
-      <ScrollView style={styles.scrollView}>
-        <Text style={styles.usersTextBox}>{allUsersText}</Text>
-      </ScrollView>
+        {/* All Users in a Single Text Box */}
+        <Text style={styles.subHeader}>All Users Data:</Text>
+        <ScrollView style={styles.scrollView}>
+          <Text style={styles.usersTextBox}>{allUsersText}</Text>
+        </ScrollView>
 
-      
-      <TouchableOpacity
-        style={styles.goToThirdScreenButton}
-        onPress={() => navigation.navigate("ThirdScreen")} 
-      >
-        <Text style={styles.goToThirdScreenButtonText}>Go to Third Screen</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          style={styles.goToThirdScreenButton}
+          onPress={() => navigation.navigate("ThirdScreen")}
+        >
+          <Text style={styles.goToThirdScreenButtonText}>Go to Third Screen</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   )
 })
@@ -84,6 +87,15 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#f0f0f0",
+  },
+  backButton: {
+    marginTop: 10,
+    marginLeft: 10,
+    padding: 8,
+    position: "absolute",
+    top: 10,
+    left: 10,
+    zIndex: 100,
   },
   header: {
     fontSize: 24,
