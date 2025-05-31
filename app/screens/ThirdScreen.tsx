@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Image,
 } from "react-native"
 import { observer } from "mobx-react-lite"
+import { LineChart } from "react-native-chart-kit"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 const screenWidth = Dimensions.get("window").width
@@ -53,6 +55,46 @@ export const ThirdScreen = observer(function ThirdScreen() {
     },
   ])
 
+  // Derive chart data from historyEntries
+  const chartData = {
+    labels: historyEntries.map((entry) => entry.date),
+    datasets: [
+      {
+        data: historyEntries.map((entry) => entry.plusPoints), // Use plusPoints for the chart values
+        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // Optional: color for the line
+        strokeWidth: 2, // Optional: line width
+      },
+    ],
+  }
+
+  // Chart configuration
+  const chartConfig = {
+    backgroundColor: "#e26a00", // A background color for the chart area
+    backgroundGradientFrom: "#fb8c00",
+    backgroundGradientTo: "#ffa726",
+    decimalPlaces: 0, // Optional: number of decimal places for the y-axis labels
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // Color of labels and lines
+    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    style: {
+      borderRadius: 16,
+    },
+    propsForDots: {
+      r: "6",
+      strokeWidth: "2",
+      stroke: "#ffa726",
+    },
+    // Optional: for cubic bezier line
+    bezier: true,
+    // Add props for the Y-axis if needed
+    propsForVerticalLabels: {
+      fontSize: 10,
+    },
+    // Add props for the X-axis if needed
+    propsForHorizontalLabels: {
+      fontSize: 10,
+    },
+  }
+
   const handleSubmit = () => {
     const parsedPoints = parseFloat(points)
     if (isNaN(parsedPoints)) {
@@ -79,7 +121,30 @@ export const ThirdScreen = observer(function ThirdScreen() {
     <ScrollView style={{flex: 1}}>
       {/* Header/Logo */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>WURQ</Text>
+        <Image
+            source={require("../../assets/images/WURQ_logo.png")} // adjust path as needed
+            style={styles.logo}
+            resizeMode="contain"
+        />
+      </View>
+
+      {/* Points per WOD Chart Section */}
+      <View style={styles.chartSection}>
+        <Text style={styles.sectionTitle}>Points per WOD</Text>
+        {historyEntries.length > 0 ? (
+          <LineChart
+            data={chartData}
+            width={screenWidth - 32}
+            height={220}
+            chartConfig={chartConfig}
+            bezier
+            style={styles.chart}
+          />
+        ) : (
+          <View style={styles.chartPlaceholder}>
+            <Text style={styles.chartPlaceholderText}>No data for chart yet.</Text>
+          </View>
+        )}
       </View>
 
       {/* History Section */}
@@ -258,5 +323,9 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  logo: {
+    width: 120,
+    height: 40,
   },
 })
