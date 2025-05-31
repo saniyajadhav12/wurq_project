@@ -12,6 +12,7 @@ import {
 import { observer } from "mobx-react-lite"
 import { LineChart } from "react-native-chart-kit"
 import { SafeAreaView } from "react-native-safe-area-context"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 
 const screenWidth = Dimensions.get("window").width
 
@@ -60,18 +61,19 @@ export const ThirdScreen = observer(function ThirdScreen() {
     labels: historyEntries.map((entry) => entry.date),
     datasets: [
       {
-        data: historyEntries.map((entry) => entry.plusPoints), // Use plusPoints for the chart values
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // Optional: color for the line
-        strokeWidth: 2, // Optional: line width
+        data: historyEntries.map((entry) => entry.plusPoints),
+        color: (opacity = 1) => `rgba(0, 255, 0, ${opacity})`, // green line
+        strokeWidth: 2,
+        withDots: false, // we'll handle dots manually if needed
       },
     ],
   }
 
   // Chart configuration
   const chartConfig = {
-    backgroundColor: "#e26a00", // A background color for the chart area
-    backgroundGradientFrom: "#fb8c00",
-    backgroundGradientTo: "#ffa726",
+    backgroundColor: "#202B33",
+    backgroundGradientFrom: "#202B33",
+    backgroundGradientTo: "#202B33",
     decimalPlaces: 0, // Optional: number of decimal places for the y-axis labels
     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // Color of labels and lines
     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -118,83 +120,89 @@ export const ThirdScreen = observer(function ThirdScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-    <ScrollView style={{flex: 1}}>
-      {/* Header/Logo */}
-      <View style={styles.header}>
-        <Image
-            source={require("../../assets/images/WURQ_logo.png")} // adjust path as needed
+      <ScrollView style={{ flex: 1 }}>
+        {/* Header/Logo */}
+        <View style={styles.header}>
+          <Image
+            source={require("../../assets/images/WURQ_logo.png")}
             style={styles.logo}
             resizeMode="contain"
-        />
-      </View>
-
-      {/* Points per WOD Chart Section */}
-      <View style={styles.chartSection}>
-        <Text style={styles.sectionTitle}>Points per WOD</Text>
-        {historyEntries.length > 0 ? (
-          <LineChart
-            data={chartData}
-            width={screenWidth - 32}
-            height={220}
-            chartConfig={chartConfig}
-            bezier
-            style={styles.chart}
           />
-        ) : (
-          <View style={styles.chartPlaceholder}>
-            <Text style={styles.chartPlaceholderText}>No data for chart yet.</Text>
-          </View>
-        )}
-      </View>
+          <View style={styles.separator} />
+        </View>
 
-      {/* History Section */}
-      <View style={styles.historySection}>
-        <Text style={styles.sectionTitle}>History:</Text>
-        {historyEntries.map((entry, index) => (
-          <View key={index} style={styles.historyCard}>
-            <View style={styles.historyLeft}>
-              <Text style={styles.historyDate}>{entry.date}</Text>
-              <Text style={styles.historyWodName}>{entry.wodName}</Text>
-              <View style={styles.historyDetailsRow}>
-                <Text style={styles.historyDetail}>{entry.time}</Text>
-                <Text style={styles.historyDetail}>{entry.percentage}</Text>
-                <Text style={styles.historyDetail}>Score: {entry.score}</Text>
+        {/* Points per WOD Chart Section */}
+        <View style={styles.chartSection}>
+          <Text style={styles.sectionTitle}>Points per WOD</Text>
+          {historyEntries.length > 0 ? (
+            <LineChart
+              data={chartData}
+              width={screenWidth - 32}
+              height={220}
+              chartConfig={chartConfig}
+              bezier
+              style={styles.chart}
+            />
+          ) : (
+            <View style={styles.chartPlaceholder}>
+              <Text style={styles.chartPlaceholderText}>No data for chart yet.</Text>
+            </View>
+          )}
+        </View>
+
+        {/* History Section */}
+        <View style={styles.historySection}>
+          <Text style={styles.sectionTitle}>History:</Text>
+          {historyEntries.map((entry, index) => (
+            <View key={index} style={styles.historyCard}>
+              <View style={styles.historyLeft}>
+                <View style={styles.historyRowTop}>
+                  <Text style={styles.historyDate}>{entry.date}</Text>
+                  <FontAwesome name="heart-o" size={16} color="#FF4F4F" style={{ marginLeft: 6 }} />
+                </View>
+                <Text style={styles.historyWodName}>{entry.wodName}</Text>
+                <View style={styles.historyDetailsRow}>
+                  <Text style={styles.historyDetail}>{entry.time}</Text>
+                  <Text style={styles.historyDetail}>{entry.percentage}</Text>
+                  <Text style={styles.historyDetail}>{entry.score}</Text>
+                </View>
+              </View>
+              <View style={styles.historyRight}>
+                <Text style={styles.historyPlusPoints}>+{entry.plusPoints}</Text>
+                <Text style={styles.historySmallText}>Total Points</Text>
               </View>
             </View>
-            <View style={styles.historyRight}>
-              <Text style={styles.historyPlusPoints}>+{entry.plusPoints}</Text>
-              <Text style={styles.historySmallText}>Total Points</Text>
-            </View>
+          ))}
+        </View>
+
+        {/* Input Form Section */}
+        <View style={styles.inputFormSection}>
+          <View style={styles.inputFormSection}>
+            <Text style={styles.inputLabel}>Points</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              value={points}
+              onChangeText={setPoints}
+              placeholder="Enter points"
+              placeholderTextColor="#aaa"
+            />
+
+            <Text style={styles.inputLabel}>Name</Text>
+            <TextInput
+              style={styles.input}
+              value={wodName}
+              onChangeText={setWodName}
+              placeholder="Enter WOD Name"
+              placeholderTextColor="#aaa"
+            />
+
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
           </View>
-        ))}
-      </View>
-
-      {/* Input Form Section */}
-      <View style={styles.inputFormSection}>
-        <Text style={styles.inputLabel}>Points</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          value={points}
-          onChangeText={setPoints}
-          placeholder="Enter points"
-          placeholderTextColor="#aaa"
-        />
-
-        <Text style={styles.inputLabel}>Name</Text>
-        <TextInput
-          style={styles.input}
-          value={wodName}
-          onChangeText={setWodName}
-          placeholder="Enter WOD Name"
-          placeholderTextColor="#aaa"
-        />
-
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 })
@@ -202,13 +210,14 @@ export const ThirdScreen = observer(function ThirdScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#2e2e3f",
-    padding: 16,
+    backgroundColor: "#313E49",
   },
   header: {
+    backgroundColor: "#313E49",
+    paddingVertical: 8,
     alignItems: "center",
     marginBottom: 20,
-    marginTop: 20,
+    borderRadius: 8,
   },
   headerText: {
     fontSize: 28,
@@ -222,7 +231,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   chartSection: {
-    backgroundColor: "#3a3a4f",
+    backgroundColor: "#313E49",
     borderRadius: 12,
     padding: 15,
     marginBottom: 20,
@@ -235,7 +244,7 @@ const styles = StyleSheet.create({
     height: 200,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#4f4f6a",
+    backgroundColor: "#313E49",
     borderRadius: 8,
   },
   chartPlaceholderText: {
@@ -244,48 +253,54 @@ const styles = StyleSheet.create({
   },
   historySection: {
     marginBottom: 20,
+    padding: 16,
   },
   historyCard: {
     flexDirection: "row",
-    backgroundColor: "#3a3a4f",
+    backgroundColor: "#20262A",
     borderRadius: 12,
-    padding: 15,
+    padding: 0,
     marginBottom: 10,
-    justifyContent: "space-between",
-    alignItems: "center",
+    overflow: "hidden",
   },
   historyLeft: {
     flex: 1,
+    padding: 15,
+  },
+  historyRowTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 4,
   },
   historyDate: {
     color: "#aaa",
     fontSize: 12,
-    marginBottom: 4,
   },
   historyWodName: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 8,
+    marginBottom: 6,
   },
   historyDetailsRow: {
     flexDirection: "row",
   },
   historyDetail: {
     color: "#fff",
-    fontSize: 14,
-    marginRight: 10,
+    fontSize: 13,
+    marginRight: 8,
   },
   historyRight: {
     backgroundColor: "#000",
     padding: 10,
-    borderRadius: 8,
+    justifyContent: "center",
     alignItems: "center",
-    marginLeft: 10,
+    minWidth: 80,
   },
   historyPlusPoints: {
-    color: "#32CD32",
-    fontSize: 24,
+    color: "#00FF00",
+    fontSize: 22,
     fontWeight: "bold",
   },
   historySmallText: {
@@ -293,10 +308,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   inputFormSection: {
-    backgroundColor: "#3a3a4f",
+    backgroundColor: "#313E49",
     borderRadius: 12,
     padding: 15,
     marginBottom: 20,
+    alignSelf: "center",
+    width: "80%",
   },
   inputLabel: {
     color: "#fff",
@@ -305,27 +322,37 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   input: {
-    backgroundColor: "#4f4f6a",
+    backgroundColor: "#20262A",
     color: "#fff",
     padding: 12,
     borderRadius: 8,
     marginBottom: 15,
     fontSize: 16,
+    width: "100%",
   },
   submitButton: {
-    backgroundColor: "#4CAF50",
-    padding: 15,
+    backgroundColor: "#fff",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 8,
     alignItems: "center",
+    alignSelf: "center",
     marginTop: 10,
+    width: "100%",
   },
   submitButtonText: {
-    color: "#fff",
-    fontSize: 18,
+    color: "#000",
+    fontSize: 16,
     fontWeight: "bold",
   },
   logo: {
-    width: 120,
-    height: 40,
+    width: 160,
+    height: 50,
+  },
+  separator: {
+    height: 4,
+    width: "100%",
+    backgroundColor: "#000",
+    marginTop: 4,
   },
 })
