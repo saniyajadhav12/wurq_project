@@ -3,12 +3,15 @@ import { observer } from "mobx-react-lite"
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native"
 import { useStores } from "../models"
 import { useNavigation } from "@react-navigation/native"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { AppStackParamList } from "@/navigators/AppNavigator"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 export const SecondScreen = observer(function SecondScreen() {
   const { userStore } = useStores() // Access your userStore
   const [timer, setTimer] = useState(0)
-  const navigation = useNavigation()
-
+  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList, 'SecondScreen'>>()
+  
   const [promiseResult, setPromiseResult] = useState("")
 
   //Display a timer that starts when the page opens.
@@ -49,7 +52,8 @@ export const SecondScreen = observer(function SecondScreen() {
     .join("\n\n")
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+    <View style={{flex: 1}}>
       {/* Timer Display */}
       <Text style={styles.header}>Second Screen</Text>
       <Text style={styles.timerText}>Timer: {timer} seconds</Text>
@@ -66,11 +70,12 @@ export const SecondScreen = observer(function SecondScreen() {
       
       <TouchableOpacity
         style={styles.goToThirdScreenButton}
-        onPress={() => {}} 
+        onPress={() => navigation.navigate("ThirdScreen")} 
       >
         <Text style={styles.goToThirdScreenButtonText}>Go to Third Screen</Text>
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
   )
 })
 

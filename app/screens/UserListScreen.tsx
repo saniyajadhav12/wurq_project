@@ -4,10 +4,13 @@ import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity }
 import { useStores } from "../models"
 import { useNavigation } from "@react-navigation/native"
 import { SafeAreaView } from "react-native-safe-area-context"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { AppStackParamList } from "@/navigators/AppNavigator"
+
 
 export const UserListScreen = observer(function UserListScreen() {
   const { userStore } = useStores()
-  const navigation = useNavigation()
+  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList, 'UserList'>>()
 
   useEffect(() => {
     userStore.fetchUsers()
@@ -65,7 +68,7 @@ export const UserListScreen = observer(function UserListScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-    <View>
+    <View style={{ flex: 1 }}>
       <Text style={styles.totalFeesText}>Total Fees Paid by All Users: ${totalFees}</Text>
       <FlatList
         data={userStore.users}
