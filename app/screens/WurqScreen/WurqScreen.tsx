@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import {
   View,
   Text,
@@ -16,8 +16,11 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { AppStackParamList } from "@/navigators/AppNavigator"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { styles } from "./WurqScreen.styles"
+import { Svg, Circle, Line } from "react-native-svg"
 
 const screenWidth = Dimensions.get("window").width
+const chartHeight = 220
+const dataPoints = [15, -2, -6, 6, 9, 5, -3, 10]
 
 export const WurqScreen = observer(function WurqScreen() {
   const [points, setPoints] = useState("189")
@@ -63,40 +66,19 @@ export const WurqScreen = observer(function WurqScreen() {
     },
   ])
 
-  const chartData = {
-    labels: historyEntries.map((entry) => entry.date),
-    datasets: [
-      {
-        data: historyEntries.map((entry) => entry.plusPoints),
-        color: (opacity = 1) => `rgba(0, 255, 0, ${opacity})`,
-        strokeWidth: 2,
-        withDots: false,
-      },
-    ],
-  }
-
   const chartConfig = {
     backgroundColor: "#202B33",
     backgroundGradientFrom: "#202B33",
     backgroundGradientTo: "#202B33",
     decimalPlaces: 0,
-    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    style: {
-      borderRadius: 16,
+    color: () => "#7D7D7D",
+    labelColor: () => "#ffffff",
+    propsForBackgroundLines: {
+      stroke: "#444",
     },
-    propsForDots: {
-      r: "6",
-      strokeWidth: "2",
-      stroke: "#ffa726",
-    },
-    bezier: true,
-    propsForVerticalLabels: {
-      fontSize: 10,
-    },
-    propsForHorizontalLabels: {
-      fontSize: 10,
-    },
+    strokeWidth: 2,
+    barPercentage: 1,
+    useShadowColorFromDataset: false,
   }
 
   const handleSubmit = () => {
@@ -140,12 +122,80 @@ export const WurqScreen = observer(function WurqScreen() {
           <Text style={styles.sectionTitle}>Points per WOD</Text>
           {historyEntries.length > 0 ? (
             <LineChart
-              data={chartData}
+              data={{
+                labels: ["", "", "", "", "", "", "", ""],
+                datasets: [
+                  {
+                    data: dataPoints,
+                    strokeWidth: 2,
+                  },
+                ],
+              }}
               width={screenWidth - 32}
               height={220}
+              withDots={false}
+              withInnerLines={true}
+              withOuterLines={false}
+              withShadow={false}
+              withVerticalLabels={false}
+              withHorizontalLabels={true}
               chartConfig={chartConfig}
-              bezier
-              style={styles.chart}
+              bezier={false}
+              decorator={() => {
+                const min = Math.min(...dataPoints)
+                const max = Math.max(...dataPoints)
+                
+                const leftPadding = 64
+                const rightPadding = 40
+                const topPadding = 16
+                const bottomPadding = 42
+                
+                const chartWidth = screenWidth - 32
+                const usableWidth = chartWidth - leftPadding - rightPadding
+                const usableHeight = chartHeight - topPadding - bottomPadding
+                
+                // Calculate spacing between points
+                const spacing = usableWidth / (dataPoints.length - 1)
+
+                const valueToY = (value: number) => {
+                  const scale = (value - min) / (max - min || 1)
+                  return topPadding + (1 - scale) * usableHeight
+                }
+
+                return (
+                  <Svg>
+                    {/* Dots */}
+                    {dataPoints.map((value, index) => {
+                      const cx = leftPadding + (spacing * index)
+                      const cy = valueToY(value)
+                      return (
+                        <Circle
+                          key={`dot-${index}`}
+                          cx={cx}
+                          cy={cy}
+                          r="6"
+                          stroke="#313E49"
+                          strokeWidth="2"
+                          fill={value >= 0 ? "#00FFB4" : "#FFFFFF"}
+                        />
+                      )
+                    })}
+                    {/* Zero Line */}
+                    <Line
+                      x1={leftPadding}
+                      x2={chartWidth - rightPadding}
+                      y1={valueToY(0)}
+                      y2={valueToY(0)}
+                      stroke="#FFFFFF"
+                      strokeDasharray="6,4"
+                      strokeWidth={2}
+                    />
+                  </Svg>
+                )
+              }}
+              style={{
+                borderRadius: 16,
+              }}
             />
           ) : (
             <View style={styles.chartPlaceholder}>
