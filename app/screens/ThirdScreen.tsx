@@ -30,7 +30,8 @@ export const ThirdScreen = observer(function ThirdScreen() {
       date: "7/30/2022",
       wodName: "WOD Newton",
       time: "12:53",
-      percentage: "0:3715%",
+      restTime: "0:37",
+      restPercent: "5%",
       score: 167,
       plusPoints: 189,
     },
@@ -38,7 +39,8 @@ export const ThirdScreen = observer(function ThirdScreen() {
       date: "8/1/2022",
       wodName: "WOD Alpha",
       time: "10:00",
-      percentage: "0:3000%",
+      restTime: "0:30",
+      restPercent: "5%",
       score: 150,
       plusPoints: 170,
     },
@@ -46,7 +48,8 @@ export const ThirdScreen = observer(function ThirdScreen() {
       date: "8/5/2022",
       wodName: "WOD Beta",
       time: "11:15",
-      percentage: "0:4000%",
+      restTime: "0:40",
+      restPercent: "5%",
       score: 180,
       plusPoints: 200,
     },
@@ -54,7 +57,8 @@ export const ThirdScreen = observer(function ThirdScreen() {
       date: "8/10/2022",
       wodName: "WOD Gamma",
       time: "09:30",
-      percentage: "0:3500%",
+      restTime: "0:35",
+      restPercent: "5%",
       score: 190,
       plusPoints: 210,
     },
@@ -112,7 +116,8 @@ export const ThirdScreen = observer(function ThirdScreen() {
       date: new Date().toLocaleDateString(),
       wodName: wodName,
       time: "N/A",
-      percentage: "N/A",
+      restTime: "0:00",
+      restPercent: "0%",
       score: parsedPoints,
       plusPoints: parsedPoints,
     }
@@ -163,23 +168,32 @@ export const ThirdScreen = observer(function ThirdScreen() {
           <Text style={styles.sectionTitle}>History:</Text>
           {historyEntries.map((entry, index) => (
             <View key={index} style={styles.historyCard}>
-              <View style={styles.historyLeft}>
-                <View style={styles.historyRowTop}>
-                  <Text style={styles.historyDate}>{entry.date}</Text>
-                  <FontAwesome name="heart-o" size={16} color="#FF4F4F" style={{ marginLeft: 6 }} />
-                </View>
-                <Text style={styles.historyWodName}>{entry.wodName}</Text>
-                <View style={styles.historyDetailsRow}>
-                  <Text style={styles.historyDetail}>{entry.time}</Text>
-                  <Text style={styles.historyDetail}>{entry.percentage}</Text>
-                  <Text style={styles.historyDetail}>{entry.score}</Text>
-                </View>
-              </View>
-              <View style={styles.historyRight}>
-                <Text style={styles.historyPlusPoints}>+{entry.plusPoints}</Text>
-                <Text style={styles.historySmallText}>Total Points</Text>
-              </View>
-            </View>
+  <View style={styles.historyLeft}>
+    <View style={styles.historyRowTop}>
+      <Text style={styles.historyDate}>{entry.date}</Text>
+      <FontAwesome name="heart-o" size={16} color="#FF4F4F" />
+    </View>
+
+    <Text style={styles.historyWodName}>{entry.wodName}</Text>
+
+    <View style={styles.detailsRow}>
+      <Text style={styles.detailLabel}>Time: </Text>
+      <Text style={styles.detailValue}>{entry.time}</Text>
+
+      <Text style={styles.detailLabel}>   Rest: </Text>
+      <Text style={styles.detailValue}>{entry.restTime}</Text>
+      <Text style={styles.percentageText}> | {entry.restPercent}</Text>
+
+      <Text style={styles.scoreValue}>   {entry.score}</Text>
+    </View>
+  </View>
+
+  <View style={styles.historyRight}>
+    <Text style={styles.historyPlusPoints}>+{entry.plusPoints}</Text>
+    <Text style={styles.historySmallText}>Total Points</Text>
+  </View>
+</View>
+
           ))}
         </View>
 
@@ -373,4 +387,36 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     marginTop: 4,
   },
+  detailsRow: {
+  flexDirection: "row",
+  alignItems: "center",
+  flexWrap: "wrap",
+  marginTop: 4,
+},
+
+detailLabel: {
+  color: "#aaa",
+  fontSize: 13,
+},
+
+detailValue: {
+  color: "#fff",
+  fontSize: 13,
+  fontWeight: "600",
+},
+
+percentageText: {
+  color: "#FF4F4F",
+  fontSize: 13,
+  fontWeight: "600",
+  marginLeft: 4,
+},
+
+scoreValue: {
+  color: "#fff",
+  fontSize: 13,
+  fontWeight: "600",
+  marginLeft: 8,
+},
+
 })
