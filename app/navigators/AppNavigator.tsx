@@ -14,9 +14,9 @@ import { DemoNavigator, DemoTabParamList } from "./DemoNavigator"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme"
 import { ComponentProps } from "react"
-import { UserListScreen } from "../screens/UserListScreen"
-import { SecondScreen } from "../screens/SecondScreen"
-import { ThirdScreen } from "../screens/ThirdScreen"
+import { UserListScreen } from "../screens/UserListScreen/UserListScreen"
+import { AllUserDataScreen } from "../screens/AllUserDataScreen/AllUserDataScreen"
+import { WurqScreen } from "../screens/WurqScreen/WurqScreen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -38,8 +38,8 @@ export type AppStackParamList = {
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
   UserList: undefined
-  SecondScreen: undefined
-  ThirdScreen: undefined
+  AllUserDataScreen: undefined
+  WurqScreen: undefined
 }
 
 /**
@@ -90,8 +90,8 @@ const AppStack = observer(function AppStack() {
 
       {/** 🔥 Your screens go here */}
       <Stack.Screen name="UserList" component={UserListScreen} />
-      <Stack.Screen name="SecondScreen" component={SecondScreen} />
-      <Stack.Screen name="ThirdScreen" component={ThirdScreen} />
+      <Stack.Screen name="AllUserDataScreen" component={AllUserDataScreen} />
+      <Stack.Screen name="WurqScreen" component={WurqScreen} />
       {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </Stack.Navigator>
   )
