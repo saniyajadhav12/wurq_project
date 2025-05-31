@@ -15,6 +15,7 @@ import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme"
 import { ComponentProps } from "react"
 import { UserListScreen } from "../screens/UserListScreen"
+import { SecondScreen } from "../screens/SecondScreen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -36,6 +37,7 @@ export type AppStackParamList = {
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
   UserList: undefined
+  SecondScreen: undefined
 }
 
 /**
@@ -86,6 +88,7 @@ const AppStack = observer(function AppStack() {
 
       {/** 🔥 Your screens go here */}
       <Stack.Screen name="UserList" component={UserListScreen} />
+      <Stack.Screen name="SecondScreen" component={SecondScreen} />
       {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </Stack.Navigator>
   )

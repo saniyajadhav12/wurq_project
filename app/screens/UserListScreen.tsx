@@ -77,7 +77,7 @@ export const UserListScreen = observer(function UserListScreen() {
       {/* Button to navigate to Second Screen */}
       <TouchableOpacity
         style={styles.goToSecondScreenButton}
-        onPress={() => {}} 
+        onPress={() => navigation.navigate("SecondScreen")} 
       >
         <Text style={styles.goToSecondScreenButtonText}>Go to Second Screen</Text>
       </TouchableOpacity>
